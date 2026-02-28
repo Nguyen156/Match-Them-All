@@ -3,6 +3,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Item : MonoBehaviour
 {
+    [Header(" Data ")]
+    [SerializeField] private EItemName itemName;
+    public EItemName ItemName => this.itemName;
+
+    private Spot spot;
+    public Spot Spot => this.spot;
+
     [Header(" Elements ")]
     [SerializeField] private Material outlineMat;
     private Material baseMat;
@@ -22,6 +29,8 @@ public class Item : MonoBehaviour
     {
         baseMat = rd.material;
     }
+
+    public void AssignSpot(Spot spot) => this.spot = spot;
 
     public void DisableShadows()
     {

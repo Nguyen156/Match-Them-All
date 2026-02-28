@@ -73,6 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a34b5561d6fb97488cf65901e2dce21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  itemName: 1
   outlineMat: {fileID: 2100000, guid: c4f5fbb33d3c6de41937cbab464efb0c, type: 2}
 --- !u!1 &6118360715220017958
 GameObject:
