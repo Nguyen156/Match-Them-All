@@ -2,32 +2,33 @@ using UnityEngine;
 
 public class Spot : MonoBehaviour
 {
+    [Header(" Elements ")]
+    [SerializeField] private Transform itemParent;
+    private Animator anim;
+
     [Header(" Settings ")]
     private Item item;
     public Item Item => this.item;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-        
+        anim = GetComponentInChildren<Animator>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     public void Populate(Item item)
     {
         this.item = item;
-        item.transform.SetParent(transform);
+        item.transform.SetParent(itemParent);
 
         item.AssignSpot(this);
     }
 
     public void Clear() => item = null;
+
+    public void BumpDown()
+    {
+        anim.Play("Bump", 0, 0);
+    }
 
     public bool IsEmpty() => item == null;
     
