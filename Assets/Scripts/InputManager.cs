@@ -35,13 +35,13 @@ public class InputManager : MonoBehaviour
             return;
 
         if (hit.collider.transform.parent == null)
+            return;
+
+        if (!hit.collider.transform.parent.TryGetComponent(out Item item))
         {
             DeselectCurrentItem();
             return;
         }
-
-        if (!hit.collider.transform.parent.TryGetComponent(out Item item))
-            return;
 
         DeselectCurrentItem();
 

@@ -700,6 +700,9 @@ MonoBehaviour:
   goUpDistance: 0.15
   goUpDuration: 0.15
   goUpEasing: 16
+  smashDuration: 0.2
+  smashEasing: 26
+  mergeParticle: {fileID: 7579995843059561869, guid: 861574a85793c8547b1cc0aaa3c9203c, type: 3}
 --- !u!1 &552074667
 GameObject:
   m_ObjectHideFlags: 0

@@ -165,6 +165,12 @@ public class ItemSpotsManager : MonoBehaviour
 
             Spot targetSpot = spots[i - 3];
 
+            if (!targetSpot.IsEmpty())
+            {
+                isBusy = false;
+                return;
+            }
+
             spot.Clear();
 
             completeCallback += () => HandleItemReachedSpot(item, false);
