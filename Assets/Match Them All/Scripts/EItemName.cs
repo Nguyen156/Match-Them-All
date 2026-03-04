@@ -1,8 +1,9 @@
 
 public enum EItemName
 {
-   Capsule,
-   Cube,
-   Cylinder,
-   Sphere
+   Diamond,
+   Emerald,
+   Gold,
+   Ruby,
+   Sapphire
 }

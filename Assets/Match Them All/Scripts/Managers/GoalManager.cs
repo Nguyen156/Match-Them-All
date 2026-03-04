@@ -42,7 +42,7 @@ public class GoalManager : MonoBehaviour
     {
         GoalCard newGoalCard = Instantiate(goalCardPrefab, goalCardParent);
 
-        newGoalCard.Configure(goal.amount);
+        newGoalCard.Configure(goal.amount, goal.itemPrefab.Icon);
 
         goalCards.Add(newGoalCard);
     }
