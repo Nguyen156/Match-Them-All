@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GoalManager : MonoBehaviour
 {
+    public static GoalManager instance;
+
     [Header(" Elements ")]
     [SerializeField] private Transform goalCardParent;
     [SerializeField] private GoalCard goalCardPrefab;
@@ -12,10 +14,18 @@ public class GoalManager : MonoBehaviour
     private ItemLevelData[] goals;
     private List<GoalCard> goalCards = new List<GoalCard>();
 
+    public ItemLevelData[] Goals => this.goals;
+
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
         LevelManager.OnLevelSpawned += LevelSpawnedCallback;
         ItemSpotsManager.OnItemPickedUp += ItemPickedUpCallback;
+        PowerupManager.OnItemPickedUp += ItemPickedUpCallback;
     }
 
 
@@ -23,10 +33,12 @@ public class GoalManager : MonoBehaviour
     {
         LevelManager.OnLevelSpawned -= LevelSpawnedCallback;
         ItemSpotsManager.OnItemPickedUp -= ItemPickedUpCallback;
+        PowerupManager.OnItemPickedUp -= ItemPickedUpCallback;
     }
 
     private void LevelSpawnedCallback(Level level)
     {
+        
         goals = level.GetGoals();
 
         GenerateGoalCards();
@@ -34,6 +46,8 @@ public class GoalManager : MonoBehaviour
 
     private void GenerateGoalCards()
     {
+        transform.Clear();
+
         for (int i = 0; i < goals.Length; i++)
             GenerateGoalCard(goals[i]);
     }
@@ -82,6 +96,6 @@ public class GoalManager : MonoBehaviour
                 return;
         }
 
-        Debug.Log("Level Complete");
+        GameManager.instance.SetGameState(EGameState.LEVELCOMPLETE);
     }
 }

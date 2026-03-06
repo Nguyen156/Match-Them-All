@@ -5,8 +5,10 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     public static Action<Item> OnItemClicked;
+    public static Action<Powerup> OnPowerupClicked;
 
     [Header(" Settings ")]
+    [SerializeField] private LayerMask powerupLayer;
     private Item currentItem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,13 +20,29 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.IsGame())
+            HandleControl();
+    }
+
+    private void HandleControl()
+    {
+        if (Input.GetMouseButtonDown(0))
+            HandleMouseDown();
+
         if (Mouse.current.leftButton.isPressed)
             HandleDrag();
         else if (Mouse.current.leftButton.wasReleasedThisFrame)
             HandleMouseUp();
+    }
 
+    private void HandleMouseDown()
+    {
+        Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit, 100, powerupLayer);
 
+        if (hit.collider == null)
+            return;
 
+        OnPowerupClicked?.Invoke(hit.collider.GetComponent<Powerup>());
     }
 
     private void HandleDrag()
