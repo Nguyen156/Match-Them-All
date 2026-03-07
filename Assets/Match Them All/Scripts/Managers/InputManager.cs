@@ -29,9 +29,9 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
             HandleMouseDown();
 
-        if (Mouse.current.leftButton.isPressed)
+        if (Input.GetMouseButton(0))
             HandleDrag();
-        else if (Mouse.current.leftButton.wasReleasedThisFrame)
+        else if (Input.GetMouseButtonUp(0))
             HandleMouseUp();
     }
 

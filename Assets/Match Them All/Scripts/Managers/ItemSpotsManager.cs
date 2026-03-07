@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Random = UnityEngine.Random;
+
 public class ItemSpotsManager : MonoBehaviour
 {
+    public static ItemSpotsManager instance;
+
     [Header(" Elements ")]
     [SerializeField] private Transform itemSpotsParent;
     private Spot[] spots;
@@ -26,7 +30,13 @@ public class ItemSpotsManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
         InputManager.OnItemClicked += ItemClickedCallback;
+        PowerupManager.OnItemBackToGame += ItemBackToGameCallback;
 
         StoreSpots();
     }
@@ -34,6 +44,18 @@ public class ItemSpotsManager : MonoBehaviour
     private void OnDestroy()
     {
         InputManager.OnItemClicked -= ItemClickedCallback;
+        PowerupManager.OnItemBackToGame -= ItemBackToGameCallback;
+    }
+
+    private void ItemBackToGameCallback(Item releasedItem)
+    {
+        if (!itemMergeDataDictionary.ContainsKey(releasedItem.ItemName))
+            return;
+
+        itemMergeDataDictionary[releasedItem.ItemName].Remove(releasedItem);
+
+        if (itemMergeDataDictionary[releasedItem.ItemName].items.Count <= 0)
+            itemMergeDataDictionary.Remove(releasedItem.ItemName);
     }
 
     private void ItemClickedCallback(Item item)
@@ -284,5 +306,25 @@ public class ItemSpotsManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public Spot GetLastOccupiedSpot()
+    {
+        List<Spot> occupiedSpot = new List<Spot>();
+
+        for (int i = 0; i < spots.Length; i++)
+        {
+            if (spots[i].IsEmpty())
+                continue;
+
+            occupiedSpot.Add(spots[i]);
+        }
+
+        if(occupiedSpot.Count <= 0)
+            return null;
+
+        occupiedSpot.Sort((a, b) => b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex()));
+
+        return occupiedSpot[0];
     }
 }

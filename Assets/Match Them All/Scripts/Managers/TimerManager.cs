@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class TimerManager : MonoBehaviour, IGameStateListener
 {
+    public static TimerManager instance;
+
     [Header(" Elements ")]
     [SerializeField] private TextMeshProUGUI timerText;
     private int currentTimer;
 
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
         LevelManager.OnLevelSpawned += LevelSpawnedCallback;
     }
 
@@ -61,6 +68,12 @@ public class TimerManager : MonoBehaviour, IGameStateListener
 
     private void StopTimer()
     {
-        CancelInvoke(nameof(UpdateTimer));
+        CancelInvoke();
+    }
+
+    public void FreezeTimer()
+    {
+        StopTimer();
+        Invoke(nameof(StartTimer), 10);
     }
 }

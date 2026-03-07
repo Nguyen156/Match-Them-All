@@ -35,9 +35,22 @@ public class Item : MonoBehaviour
 
     public void AssignSpot(Spot spot) => this.spot = spot;
 
+    public void UnassignSpot() => spot = null;
+
+    public void EnableShadow()
+    {
+        rd.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+    }
+
     public void DisableShadows()
     {
         rd.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+    }
+
+    public void EnablePhysics()
+    {
+        rb.isKinematic = false;
+        cd.enabled = true;
     }
 
     public void DisablePhysics()
@@ -55,6 +68,9 @@ public class Item : MonoBehaviour
     {
         rd.materials = new Material[] { baseMat };
     }
+
+    public void ApplyRandomForce(float magnitude)
+        => rb.AddForce(Random.onUnitSphere * magnitude, ForceMode.VelocityChange);
 
     private void OnDrawGizmos()
     {

@@ -25,7 +25,9 @@ public class GoalManager : MonoBehaviour
 
         LevelManager.OnLevelSpawned += LevelSpawnedCallback;
         ItemSpotsManager.OnItemPickedUp += ItemPickedUpCallback;
+
         PowerupManager.OnItemPickedUp += ItemPickedUpCallback;
+        PowerupManager.OnItemBackToGame += ItemBackToGameCallback;
     }
 
 
@@ -34,6 +36,19 @@ public class GoalManager : MonoBehaviour
         LevelManager.OnLevelSpawned -= LevelSpawnedCallback;
         ItemSpotsManager.OnItemPickedUp -= ItemPickedUpCallback;
         PowerupManager.OnItemPickedUp -= ItemPickedUpCallback;
+        PowerupManager.OnItemBackToGame -= ItemBackToGameCallback;
+    }
+
+    private void ItemBackToGameCallback(Item releasedItem)
+    {
+        for(int i = 0; i < goals.Length; i++)
+        {
+            if (goals[i].itemPrefab.ItemName != releasedItem.ItemName)
+                continue;
+
+            goals[i].amount++;
+            goalCards[i].UpdateAmount(goals[i].amount);
+        }
     }
 
     private void LevelSpawnedCallback(Level level)
@@ -96,6 +111,9 @@ public class GoalManager : MonoBehaviour
                 return;
         }
 
-        GameManager.instance.SetGameState(EGameState.LEVELCOMPLETE);
+        Invoke(nameof(SetLevelComplete), 3f);
     }
+
+    private void SetLevelComplete() 
+        => GameManager.instance.SetGameState(EGameState.LEVELCOMPLETE);
 }
