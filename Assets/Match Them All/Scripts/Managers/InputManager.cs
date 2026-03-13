@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class InputManager : MonoBehaviour
 {
@@ -26,18 +27,33 @@ public class InputManager : MonoBehaviour
 
     private void HandleControl()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Pointer.current.press.wasPressedThisFrame)
             HandleMouseDown();
 
-        if (Input.GetMouseButton(0))
+        if (Pointer.current.press.isPressed)
             HandleDrag();
-        else if (Input.GetMouseButtonUp(0))
+        else if (Pointer.current.press.wasReleasedThisFrame)
             HandleMouseUp();
+    }
+
+    private bool IsPress()
+    {
+        // Touch (mobile)
+        if (Touchscreen.current != null &&
+            Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+            return true;
+
+        // Mouse (PC)
+        if (Mouse.current != null &&
+            Mouse.current.leftButton.wasPressedThisFrame)
+            return true;
+
+        return false;
     }
 
     private void HandleMouseDown()
     {
-        Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit, 100, powerupLayer);
+        Physics.Raycast(Camera.main.ScreenPointToRay(Pointer.current.position.ReadValue()), out RaycastHit hit, 100, powerupLayer);
 
         if (hit.collider == null)
             return;
@@ -47,7 +63,7 @@ public class InputManager : MonoBehaviour
 
     private void HandleDrag()
     {
-        Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit, 100);
+        Physics.Raycast(Camera.main.ScreenPointToRay(Pointer.current.position.ReadValue()), out RaycastHit hit, 100);
 
         if (hit.collider == null)
             return;
@@ -84,5 +100,7 @@ public class InputManager : MonoBehaviour
 
         OnItemClicked?.Invoke(currentItem);
         currentItem = null;
+
+        AudioManager.instance.PlaySFX(2);
     }
 }

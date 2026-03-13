@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupManager : MonoBehaviour
+using Random = UnityEngine.Random;
+
+public class PowerupManager : MonoBehaviour, IGameStateListener
 {
     [Header(" Vacuum Elements ")]
     [SerializeField] private Vacuum vacuum;
@@ -68,6 +70,9 @@ public class PowerupManager : MonoBehaviour
         switch (powerup.PowerupType)
         {
             case EPowerupType.Vacuum:
+                if (!CanUsePowerup(vacuumPUCount))
+                    break;
+
                 HandlePowerupClicked(VACUUM_COUNT, ref vacuumPUCount);
                 VacuumPowerup();
                 UpdateVisuals();
@@ -75,6 +80,8 @@ public class PowerupManager : MonoBehaviour
                 break;
 
             case EPowerupType.Spring:
+                if (!CanUsePowerup(springPUCount))
+                    break;
                 HandlePowerupClicked(SPRING_COUNT, ref springPUCount);
                 SpringPowerup();
                 UpdateVisuals();
@@ -82,6 +89,8 @@ public class PowerupManager : MonoBehaviour
                 break;
 
             case EPowerupType.Fan:
+                if (!CanUsePowerup(fanPUCount))
+                    break;
                 HandlePowerupClicked(FAN_COUNT, ref fanPUCount);
                 FanPowerup();
                 UpdateVisuals();
@@ -89,6 +98,8 @@ public class PowerupManager : MonoBehaviour
                 break;
 
             case EPowerupType.Freeze:
+                if (!CanUsePowerup(freezePUCount))
+                    break;
                 HandlePowerupClicked(FREEZE_COUNT, ref freezePUCount);
                 FreezePowerup();
                 UpdateVisuals();
@@ -97,12 +108,15 @@ public class PowerupManager : MonoBehaviour
         }
     }
 
+    private bool CanUsePowerup(int powerupCount) => powerupCount > 0;
+
     private void HandlePowerupClicked(string key, ref int powerupCount)
     {
         if (powerupCount <= 0)
         {
-            powerupCount = 3;
-            SaveData(key, powerupCount);
+            return;
+            //powerupCount = 3;
+            //SaveData(key, powerupCount);
         }
         else
         {
@@ -116,27 +130,6 @@ public class PowerupManager : MonoBehaviour
         }
 
     }
-
-    /*
-    private void HandleVacuumClicked()
-    {
-        if(vacuumPUCount <= 0)
-        {
-            vacuumPUCount = 3;
-            SaveData();
-        }
-        else
-        {
-            isBusy = true;
-
-            vacuumPUCount--;
-            SaveData();
-
-            vacuum.PlayAnim();
-        }
-
-    }
-    */
 
     /*
     private void VacuumStartedCallback()
@@ -260,13 +253,10 @@ public class PowerupManager : MonoBehaviour
     [Button]
     public void SpringPowerup()
     {
-
         Spot spot = ItemSpotsManager.instance.GetLastOccupiedSpot();
 
         if(spot == null)
             return;
-
-        isBusy = true;
 
         Item itemToRelease = spot.Item;
 
@@ -331,5 +321,39 @@ public class PowerupManager : MonoBehaviour
     private void SaveData(string key, int powerupCount)
     {
         PlayerPrefs.SetInt(key, powerupCount);
+    }
+
+    public void GameStateChangedCallback(EGameState gameState)
+    {
+        if (gameState != EGameState.LEVELCOMPLETE)
+            return;
+
+        int randomPUIndex = Random.Range(1, 4);
+
+        switch (randomPUIndex)
+        {
+            case 1:
+                vacuumPUCount++;
+                SaveData(VACUUM_COUNT, vacuumPUCount);
+                break;
+
+            case 2:
+                springPUCount++;
+                SaveData(SPRING_COUNT, springPUCount);
+                break;
+
+            case 3:
+                fanPUCount++;
+                SaveData(FAN_COUNT, fanPUCount);
+                break;
+
+            case 4:
+                freezePUCount++;
+                SaveData(FREEZE_COUNT, freezePUCount);
+                break;
+
+            default:
+                break;
+        }
     }
 }

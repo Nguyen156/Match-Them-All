@@ -19,7 +19,10 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -52,6 +55,13 @@ public class GameManager : MonoBehaviour
     {
         SetGameState(EGameState.GAME);
     }
+
+    public void PauseGame() => SetGameState(EGameState.PAUSE);
+
+    public void Continue() => SetGameState(EGameState.GAME);
+
+    public void Menu() => SceneManager.LoadScene(0);
+    
 
     public void NextButtonCallback()
     {

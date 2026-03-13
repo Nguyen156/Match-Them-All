@@ -1,9 +1,9 @@
 
 public enum EItemName
 {
-   Diamond,
-   Emerald,
-   Gold,
-   Ruby,
-   Sapphire
+   Apple,
+   Banana,
+   Orange,
+   Strawberry,
+   Watermelon
 }

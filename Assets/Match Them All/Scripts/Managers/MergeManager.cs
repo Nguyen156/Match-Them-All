@@ -67,5 +67,7 @@ public class MergeManager : MonoBehaviour
             , Quaternion.identity, transform);
 
         newParticle.Play();
+
+        AudioManager.instance.PlaySFX(3);
     }
 }

@@ -96,7 +96,9 @@ public class GoalManager : MonoBehaviour
 
     private void CompleteGoal(int goalIndex)
     {
-        Debug.Log("Goal complete: " + goals[goalIndex].itemPrefab.ItemName);
+        //Debug.Log("Goal complete: " + goals[goalIndex].itemPrefab.ItemName);
+
+        AudioManager.instance.PlaySFX(0);
 
         goalCards[goalIndex].Complete();
 
@@ -114,6 +116,9 @@ public class GoalManager : MonoBehaviour
         Invoke(nameof(SetLevelComplete), 3f);
     }
 
-    private void SetLevelComplete() 
-        => GameManager.instance.SetGameState(EGameState.LEVELCOMPLETE);
+    private void SetLevelComplete()
+    {
+        GameManager.instance.SetGameState(EGameState.LEVELCOMPLETE);
+        AudioManager.instance.PlaySFX(4);
+    }
 }

@@ -268,7 +268,10 @@ public class ItemSpotsManager : MonoBehaviour
     private void CheckForGameover()
     {
         if (GetFreeSpot() == null)
+        {
+            AudioManager.instance.PlaySFX(5);
             GameManager.instance.SetGameState(EGameState.GAMEOVER);
+        }
         else
             isBusy = false;
     }

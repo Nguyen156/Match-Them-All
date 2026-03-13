@@ -25,17 +25,15 @@ public class TimerManager : MonoBehaviour, IGameStateListener
         LevelManager.OnLevelSpawned -= LevelSpawnedCallback;
     }
 
-
-
     private void LevelSpawnedCallback(Level level)
     {
         currentTimer = level.Duration;
         UpdateTimerText();
 
-        StartTimer();
+        //StartTimer();
     }
 
-    private void StartTimer()
+    public void StartTimer()
     {
         InvokeRepeating(nameof(UpdateTimer), 0, 1);
     }
@@ -54,7 +52,7 @@ public class TimerManager : MonoBehaviour, IGameStateListener
     private void TimerFinished()
     {
         GameManager.instance.SetGameState(EGameState.GAMEOVER);
-        StopTimer();
+        //StopTimer();
     }
 
     private string SecondsToString(int seconds) 
@@ -62,8 +60,12 @@ public class TimerManager : MonoBehaviour, IGameStateListener
 
     public void GameStateChangedCallback(EGameState gameState)
     {
-        if (gameState == EGameState.LEVELCOMPLETE || gameState == EGameState.GAMEOVER)
+        if (gameState == EGameState.LEVELCOMPLETE || 
+            gameState == EGameState.GAMEOVER ||
+            gameState == EGameState.PAUSE)
             StopTimer();
+        else if(gameState == EGameState.GAME)
+            StartTimer();
     }
 
     private void StopTimer()

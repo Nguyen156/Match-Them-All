@@ -20,6 +20,8 @@ public class LevelManager : MonoBehaviour, IGameStateListener
     [Header(" Actions ")]
     public static Action<Level> OnLevelSpawned;
 
+    private static bool isLevelSpawned = false;
+
     private void Awake()
     {
         if (instance == null)
@@ -28,11 +30,11 @@ public class LevelManager : MonoBehaviour, IGameStateListener
             Destroy(gameObject);
 
         LoadData();
+        isLevelSpawned = false;
     }
 
     private void Start()
     {
-        
     }
 
     private void SpawnLevel()
@@ -62,11 +64,16 @@ public class LevelManager : MonoBehaviour, IGameStateListener
     {
         if(gameState == EGameState.GAME)
         {
+            if(isLevelSpawned)
+                return;
+
+            isLevelSpawned = true;
             SpawnLevel();
             UpdateLevelText();
         }
         else if(gameState == EGameState.LEVELCOMPLETE)
         {
+            isLevelSpawned = false;
             levelIndex++;
             SaveData();
         }
